@@ -22,7 +22,9 @@ def getFile() -> str:
 def readFile(file) -> list:
     fileList = []
     tempList = []
-
+    extensions = [
+        'JPG', 'jpg', 'mp4', 'MP4', "CR2"
+    ]
     pattern = r"([\w.\s_()]+\.\w+)\s+([a-zA-Z]:[\[\]!(),._\\\w\s-]+)\s+\d+[,\d]*\s+[МБMBKКГG]+"
 
     with open(file, 'r', encoding="utf8") as file:
@@ -39,8 +41,11 @@ def readFile(file) -> list:
             if not matches:
                 continue
             allMatches = matches.groups()
-            path = allMatches[2] + '\\' + allMatches[1]
-            tempList.append(line)
+            extension = matches[1].split('.')[-1]
+            if not extension in extensions:
+                continue
+            path = matches[2] + '\\' + matches[1]
+            tempList.append(path)
 
     if not fileList:
         exit()
@@ -52,13 +57,25 @@ def readFile(file) -> list:
 
 def prepareFiles(files) -> list:
     filesForDelete = []
-    for file in files:
-        for line in file:
-            matches = re.search(r"([\w.\s_()]+\.\w+)\s+([a-zA-Z]:[\[\]!(),._\\\w\s-]+)\s+\d+[,\d]*\s+[МБMBKКГG]+", line, re.IGNORECASE|re.UNICODE)
-            if not matches:
-                continue
-            filesForDelete.append(matches[2])
+    for line in files:
+        fileForDelete = shooseFileForDelete(line)
+        if not fileForDelete:
+            continue
+
+        filesForDelete.append(fileForDelete)
     return filesForDelete
+
+def shooseFileForDelete(files):
+    patterns = [
+        r"YandexDisk[\\]+Фотокамера",
+    ]
+    for file in files:
+        for pattern in patterns:
+            if not re.search(pattern, file, re.IGNORECASE):
+                continue
+
+            return file
+
 
 
 file = getFile()
@@ -71,4 +88,7 @@ if not files:
     print('files not found')
     exit()
 
-# filesForDelete = prepareFiles(files)
+filesForDelete = prepareFiles(files)
+for file in filesForDelete:
+    print(file)
+    sleep(1)
