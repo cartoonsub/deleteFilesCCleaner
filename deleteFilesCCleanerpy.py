@@ -6,7 +6,7 @@ from time import sleep
 
 def getFile() -> str:
     needFile = ''
-    os.chdir('deleteFilesCCleaner')
+    # os.chdir('deleteFilesCCleaner')
     curentDir = os.getcwd()
     for root, dirs, files in os.walk(curentDir):
         if not files:
@@ -90,5 +90,8 @@ if not files:
 
 filesForDelete = prepareFiles(files)
 for file in filesForDelete:
+    if os.path.isfile(file):
+        continue
+    
     print(file)
     sleep(1)
