@@ -90,8 +90,10 @@ if not files:
 
 filesForDelete = prepareFiles(files)
 for file in filesForDelete:
-    if os.path.isfile(file):
+    if not os.path.isfile(file):
+        print('file not found' + file)
         continue
     
-    print(file)
-    sleep(1)
+    os.remove(file)
+
+print(filesForDelete)
