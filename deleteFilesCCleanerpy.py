@@ -27,7 +27,7 @@ def readFile(file) -> list:
     ]
     pattern = r"([\w.\s_()-]+\.\w+)\s+([a-zA-Z]:[\[\]!(),._\\\w\s-]+)\s+\d+[,\d]*\s+[МБMBKКГG]+"
 
-    with open(file, 'r', encoding="utf8") as file:
+    with open(file, 'r', encoding="utf8", errors='ignore') as file:
         for line in file:
             if not line:
                 break
@@ -37,8 +37,12 @@ def readFile(file) -> list:
                 fileList.append(tempList)
                 tempList = []
                 continue
+
             matches = re.search(pattern, line, re.IGNORECASE|re.UNICODE)
             if not matches:
+                
+                print(line)
+                sleep(1)
                 continue
             allMatches = matches.groups()
             extension = matches[1].split('.')[-1]
@@ -72,8 +76,11 @@ def shooseFileForDelete(files):
     for file in files:
         for pattern in patterns:
             if not re.search(pattern, file, re.IGNORECASE):
+                print(file)
+                sleep(1)
                 continue
 
+            print(file)
             return file
 
 
