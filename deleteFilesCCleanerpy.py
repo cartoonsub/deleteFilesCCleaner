@@ -25,7 +25,7 @@ def readFile(file) -> list:
     extensions = [
         'JPG', 'jpg', 'mp4', 'MP4', "CR2"
     ]
-    pattern = r"([\w.\s_()]+\.\w+)\s+([a-zA-Z]:[\[\]!(),._\\\w\s-]+)\s+\d+[,\d]*\s+[МБMBKКГG]+"
+    pattern = r"([\w.\s_()-]+\.\w+)\s+([a-zA-Z]:[\[\]!(),._\\\w\s-]+)\s+\d+[,\d]*\s+[МБMBKКГG]+"
 
     with open(file, 'r', encoding="utf8") as file:
         for line in file:
