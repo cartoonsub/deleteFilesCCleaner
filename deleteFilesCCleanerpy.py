@@ -29,7 +29,7 @@ def readFile(file) -> list:
     ]
     pattern = r"([\w.\s_()-]+\.\w+)\s+([a-zA-Z]:[\[\]!(),._\\\w\s-]+)\s+\d+[,\d]*\s+[МБMBKКГG]+"
 
-    with codecs.open(file, 'r', encoding="utf8") as file:
+    with codecs.open(file, 'r', encoding="utf16") as file:
         for line in file:
             if not line:
                 break
@@ -70,12 +70,12 @@ def prepareFiles(files) -> list:
 
 def shooseFileForDelete(files):
     patterns = [
-        r"YandexDisk[\\]+Фотокамера",
+        # r"YandexDisk[\\]+Фотокамера",
         # r"YandexDisk[\\]+",
-        r"YandexDisk.+greece.+camera",
-        r"YandexDisk.+DCIM",
-        r"YandexDisk.+phone.+Camera",
-
+        # r"YandexDisk.+greece.+camera",
+        # r"YandexDisk.+DCIM",
+        # r"YandexDisk.+phone.+Camera",
+        r"myphone[\\]+DCIM[\\]+Camera",
     ]
     data = {}
     for key in range(len(files)):
@@ -110,7 +110,7 @@ for file in filesForDelete:
         print('file not found' + file['delete'])
         continue
     
-    os.remove(file)
+    os.remove(file['delete'])
 
 for file in filesForDelete:
     print(file['delete'])
