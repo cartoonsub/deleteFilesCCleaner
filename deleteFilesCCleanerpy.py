@@ -2,7 +2,9 @@ import re
 import os
 import sys
 import shutil
+import codecs
 from time import sleep
+from pprint import pprint
 
 def getFile() -> str:
     needFile = ''
@@ -27,7 +29,7 @@ def readFile(file) -> list:
     ]
     pattern = r"([\w.\s_()-]+\.\w+)\s+([a-zA-Z]:[\[\]!(),._\\\w\s-]+)\s+\d+[,\d]*\s+[МБMBKКГG]+"
 
-    with open(file, 'r', encoding="utf8", errors='ignore') as file:
+    with codecs.open(file, 'r', encoding="utf8") as file:
         for line in file:
             if not line:
                 break
@@ -40,9 +42,6 @@ def readFile(file) -> list:
 
             matches = re.search(pattern, line, re.IGNORECASE|re.UNICODE)
             if not matches:
-                
-                print(line)
-                sleep(1)
                 continue
             allMatches = matches.groups()
             extension = matches[1].split('.')[-1]
@@ -72,16 +71,26 @@ def prepareFiles(files) -> list:
 def shooseFileForDelete(files):
     patterns = [
         r"YandexDisk[\\]+Фотокамера",
+        # r"YandexDisk[\\]+",
+        r"YandexDisk.+greece.+camera",
+        r"YandexDisk.+DCIM",
+        r"YandexDisk.+phone.+Camera",
+
     ]
-    for file in files:
+    data = {}
+    for key in range(len(files)):
+        file = files[key]
         for pattern in patterns:
             if not re.search(pattern, file, re.IGNORECASE):
-                print(file)
-                sleep(1)
                 continue
 
-            print(file)
-            return file
+            data['delete'] = file
+            data['keep'] = files[key - 1]
+            break
+            
+    if 'delete' not in data:
+        data = {}
+    return data
 
 
 
@@ -97,10 +106,13 @@ if not files:
 
 filesForDelete = prepareFiles(files)
 for file in filesForDelete:
-    if not os.path.isfile(file):
-        print('file not found' + file)
+    if not os.path.isfile(file['delete']):
+        print('file not found' + file['delete'])
         continue
     
     os.remove(file)
 
-print(filesForDelete)
+for file in filesForDelete:
+    print(file['delete'])
+    print(file['keep'])
+    print('-----------------')
